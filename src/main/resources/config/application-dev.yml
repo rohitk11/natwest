@@ -49,7 +49,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/natwest?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: natwest
-    password: natwest
+    password: root
     hikari:
       poolName: Hikari
       auto-commit: false
