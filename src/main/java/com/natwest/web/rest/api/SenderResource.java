@@ -1,10 +1,9 @@
 package com.natwest.web.rest.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.natwest.service.dto.EncryptedTransactionDTO;
 import com.natwest.service.dto.TransactionDTO;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tech.jhipster.security.RandomUtil;
 
 @RestController
 @RequestMapping("/sender")
@@ -42,11 +40,20 @@ public class SenderResource {
         @RequestBody TransactionDTO dto
     ) throws Exception {
         log.info("REST request to sender : {}", dto);
-        TransactionDTO result = callReceiver(dto);
+        //Just adding a Encrypted DTO not such encryption
+        EncryptedTransactionDTO encrDTO = encrypt(dto);
+        //Calling receiver API
+        TransactionDTO result = callReceiver(encrDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    public TransactionDTO callReceiver(TransactionDTO dto) throws IOException, Exception {
+    private static EncryptedTransactionDTO encrypt(TransactionDTO dto) {
+        EncryptedTransactionDTO encrDTO = new EncryptedTransactionDTO();
+        encrDTO.setBody(dto);
+        return encrDTO;
+    }
+
+    public TransactionDTO callReceiver(EncryptedTransactionDTO dto) throws IOException, Exception {
         String requestJson = new JSONObject(dto).toString();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
